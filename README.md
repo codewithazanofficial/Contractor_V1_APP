@@ -1,4 +1,4 @@
-# Contractor App V1
+# Contractor_V1_APP
 
 A comprehensive wage management system built with Streamlit and MySQL for managing employees, projects, and wage entries.
 
@@ -35,8 +35,8 @@ A comprehensive wage management system built with Streamlit and MySQL for managi
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/YOUR_USERNAME/Contractor_APP_V1.git
-cd Contractor_APP_V1
+git clone https://github.com/codewithazanofficial/Contractor_V1_APP.git
+cd Contractor_V1_APP
 ```
 
 2. Create and activate virtual environment:
@@ -74,7 +74,7 @@ streamlit run app.py
 ## Project Structure
 
 ```
-Contractor_APP_V1/
+Contractor_V1_APP/
 ├── app.py                  # Main Streamlit application
 ├── database_logic.py       # Database operations (CRUD)
 ├── init_db.py             # Database initialization script
@@ -99,4 +99,3 @@ Contractor_APP_V1/
 ## License
 
 Private Repository
-
