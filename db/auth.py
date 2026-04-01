@@ -13,7 +13,7 @@ HOW TO ADD A NEW CLIENT (you do this manually in Supabase dashboard):
 """
 
 from db.connection import get_client
-
+import streamlit as st
 
 def verify_login(contractor_id: str, password: str):
     """
@@ -34,7 +34,7 @@ def verify_login(contractor_id: str, password: str):
             .eq("contractor_id", contractor_id) \
             .eq("password", password) \
             .execute()
-
+        print(response.data) 
         if response.data:
             contractor = response.data[0]
             # Check if account is active
