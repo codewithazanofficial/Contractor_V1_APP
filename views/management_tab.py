@@ -29,13 +29,23 @@ def render():
             with col1:
                 emp_name = st.text_input("Employee Name:", placeholder="Enter full name")
             with col2:
-                emp_phone = st.text_input("Phone Number:", placeholder="e.g., 555-0101")
+                has_error = False
+                emp_phone = st.text_input("Phone Number:", placeholder="e.g.,03xxxxxxxxx", max_chars=11)
+                if emp_phone:
+                    if len(emp_phone) != 11:
+                        st.error("Invalid Phone Number. Please Enter an 11 digit phone number.")
+                        has_error = True
+                    elif not(emp_phone.isdigit()):
+                        st.error("Use Digits only in Phone Number.")
+                        has_error = True
             emp_wage = st.number_input("Base Wage (PKR/unit):", min_value=0.0, step=0.25, format="%.2f")
 
-            submitted = st.form_submit_button("💾 Save Entry", width='stretch')
+            submitted = st.form_submit_button("💾 Save Entry",type='primary', width='stretch', key= 'add_emp_btn')
         if submitted:
             if not emp_name:
                 st.warning("⚠️ Please enter an employee name.")
+            elif has_error:
+                st.warning("⚠️ Please fix the erros before saving.")
             elif not emp_phone:
                 st.warning("⚠️ Please enter a phone number.")
             elif emp_wage <= 0:
@@ -56,7 +66,7 @@ def render():
         
         with st.form("project_entry_form"):
             project_name = st.text_input("Project Name:", placeholder="Enter project name")
-            submitted = st.form_submit_button("💾 Save Entry", width='stretch')
+            submitted = st.form_submit_button("💾 Save Entry",type='primary', width='stretch', key = 'add_prj_btn')
         if submitted:
             if not project_name:
                 st.warning("⚠️ Please enter a project name.")
@@ -78,22 +88,30 @@ def render():
             current_emp = next((e for e in employees if e['employee_id'] == employee_id), None)
 
             if current_emp:
-                
                 if st.session_state.update_employee_success:
                     st.success(st.session_state.update_employee_success)
                     st.session_state.update_employee_success = None
                 with st.form("update_employee_form"):
                     col1, col2 = st.columns(2)
                     with col1:
-                        updated_name = st.text_input("Employee Name:", value=current_emp['name'], key="update_emp_name")
+                        updated_name = st.text_input("Employee Name:", value=current_emp['name'], key=f"update_emp_name_{employee_id}")
                     with col2:
-                        updated_phone = st.text_input("Phone Number:", value=current_emp.get('phone', ''), key="update_emp_phone")
+                        has_error = False
+                        updated_phone = st.text_input("Phone Number:", value=current_emp.get('phone', ''), key=f"update_emp_phone_{employee_id}", max_chars=11)
+                        if len(updated_phone) != 11:
+                            st.error("Enter a phone number of 11 digits.")
+                            has_error = True
+                        elif not(updated_phone.isdigit()):
+                            st.error("Use Digits only in Phone Number.")
+                            has_error = True
                     updated_wage = st.number_input("Base Wage (PKR/unit):", min_value=0.0, step=0.25,
                                                 value=float(current_emp['base_wage']), format="%.2f", key="update_emp_wage")
-                    submitted = st.form_submit_button("💾 Save Entry", width='stretch')
+                    submitted = st.form_submit_button("💾 Save Entry", type='primary', width='stretch', key = 'upd_emp_btn')
                 if submitted:
                     if not updated_name:
                         st.warning("⚠️ Please enter an employee name.")
+                    elif has_error:
+                        st.warning("Please Fix the erros before saving.")
                     elif not updated_phone:
                         st.warning("⚠️ Please enter a phone number.")
                     elif updated_wage <= 0:
@@ -146,13 +164,13 @@ def render():
             current_proj = next((p for p in projects if p['project_id'] == project_id), None)
 
             if current_proj:
-                updated_project_name = st.text_input("Project Name:", value=current_proj['project_name'], key="update_proj_name")
-
                 if st.session_state.update_project_success:
                     st.success(st.session_state.update_project_success)
                     st.session_state.update_project_success = None
-
-                if st.button("💾 Update Project", type="primary", width='stretch', key="update_proj_btn"):
+                with st.form("update_project_form"):    
+                    updated_project_name = st.text_input("Project Name:", value=current_proj['project_name'], key="update_proj_name")
+                    submitted = st.form_submit_button("💾 Save Entry",type="primary", width='stretch', key="update_proj_btn")
+                if submitted:
                     if not updated_project_name:
                         st.warning("⚠️ Please enter a project name.")
                     else:
