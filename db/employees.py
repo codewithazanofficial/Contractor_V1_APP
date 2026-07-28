@@ -32,6 +32,8 @@ def get_employees():
     Returns:
         List of dicts with keys: employee_id, name, phone, base_wage
     """
+    if "employees" in st.session_state:
+        return st.session_state.employees
     try:
         client = get_client()
         response = client.table("employees") \
@@ -39,7 +41,8 @@ def get_employees():
             .eq("contractor_id", get_contractor_id()) \
             .order("employee_id") \
             .execute()
-        return response.data
+        st.session_state.employees = response.data
+        return st.session_state.employees
     except Exception as e:
         print(f"Error fetching employees: {e}")
         return []
@@ -73,18 +76,6 @@ def add_employee(name: str, phone: str, base_wage: float) -> bool:
     except Exception as e:
         print(f"Error adding employee: {e}")
         return False
-    # try:
-    #     client = get_client()
-    #     client.table("employees").insert({
-    #         "contractor_id": get_contractor_id(),
-    #         "name": name,
-    #         "phone": phone,
-    #         "base_wage": base_wage
-    #     }).execute()
-    #     return True
-    # except Exception as e:
-    #     print(f"Error adding employee: {e}")
-    #     return False
 
 
 def update_employee(employee_id: int, name: str, phone: str, base_wage: float) -> bool:
@@ -113,21 +104,7 @@ def update_employee(employee_id: int, name: str, phone: str, base_wage: float) -
     except Exception as e:
         print(f"Error updating employee: {e}")
         return False
-    # try:
-    #     client = get_client()
-    #     client.table("employees").update({
-    #         "name": name,
-    #         "phone": phone,
-    #         "base_wage": base_wage
-    #     }).eq("employee_id", employee_id) \
-    #       .eq("contractor_id", get_contractor_id()) \
-    #       .execute()
-    #     return True
-    # except Exception as e:
-    #     print(f"Error updating employee: {e}")
-    #     return False
-
-
+    
 def delete_employee(employee_id: int) -> bool:
     """
     Delete an employee — scoped to logged in contractor for safety.
@@ -150,14 +127,3 @@ def delete_employee(employee_id: int) -> bool:
     except Exception as e:
         print(f"Error deleting employee: {e}")
         return False
-    # try:
-    #     client = get_client()
-    #     client.table("employees") \
-    #         .delete() \
-    #         .eq("employee_id", employee_id) \
-    #         .eq("contractor_id", get_contractor_id()) \
-    #         .execute()
-    #     return True
-    # except Exception as e:
-    #     print(f"Error deleting employee: {e}")
-    #     return False

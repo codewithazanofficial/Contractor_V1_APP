@@ -63,7 +63,7 @@ def add_project(project_name: str):
             "project_name" : project_name
         }).execute()
         if "employees" in st.session_state:
-            st.session_state.employees.append(response.data[0])
+            st.session_state.projects.append(response.data[0])
         return True
     except Exception as e:
         print(f"Error adding project: {e}")
@@ -112,8 +112,8 @@ def delete_project(project_id: int) -> bool:
         .eq("project_id", project_id).execute()
 
         if "projects" in st.session_state:
-            st.session_state.employees = [
-                e for e in st.session_state.employees
+            st.session_state.projects = [
+                e for e in st.session_state.projects
                 if e["project_id"] != project_id
             ]
         return True
